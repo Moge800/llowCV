@@ -1,3 +1,4 @@
+from llowcv._config import config
 from llowcv.camera.base import Camera
 from llowcv.image import (
     alpha_composite,
@@ -61,4 +62,6 @@ __all__ = [
     "from_cv2",
     "as_numpy",
     "to_bgr",
+    # config
+    "config",
 ]
