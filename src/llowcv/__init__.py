@@ -6,6 +6,9 @@ from llowcv.image import (
     blend,
     composite,
     crop,
+    draw_circle,
+    draw_line,
+    draw_rectangle,
     flip,
     imread,
     imshow,
@@ -46,6 +49,9 @@ __all__ = [
     "merge",
     # draw
     "put_text",
+    "draw_rectangle",
+    "draw_circle",
+    "draw_line",
     # composite
     "blend",
     "composite",

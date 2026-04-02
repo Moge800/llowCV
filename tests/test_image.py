@@ -168,6 +168,64 @@ class TestPutText:
         assert out.size == rgb_image.size
 
 
+class TestDrawRectangle:
+    def test_returns_new_image(self, rgb_image: Image.Image) -> None:
+        out = lcv.draw_rectangle(rgb_image, (10, 10), (50, 50), (0, 255, 0))
+        assert out is not rgb_image
+
+    def test_size_preserved(self, rgb_image: Image.Image) -> None:
+        out = lcv.draw_rectangle(rgb_image, (10, 10), (50, 50), (0, 255, 0))
+        assert out.size == rgb_image.size
+
+    def test_outline_drawn(self, rgb_image: Image.Image) -> None:
+        """輪郭線の色が正しく描画されること。"""
+        out = lcv.draw_rectangle(
+            rgb_image, (10, 10), (50, 50), (0, 255, 0), thickness=1
+        )
+        assert out.getpixel((10, 10)) == (0, 255, 0)
+
+    def test_fill_with_minus1(self, rgb_image: Image.Image) -> None:
+        """thickness=-1 で塗りつぶされること。"""
+        out = lcv.draw_rectangle(
+            rgb_image, (10, 10), (50, 50), (0, 255, 0), thickness=-1
+        )
+        assert out.getpixel((30, 30)) == (0, 255, 0)
+
+
+class TestDrawCircle:
+    def test_returns_new_image(self, rgb_image: Image.Image) -> None:
+        out = lcv.draw_circle(rgb_image, (128, 128), 20, (255, 0, 0))
+        assert out is not rgb_image
+
+    def test_size_preserved(self, rgb_image: Image.Image) -> None:
+        out = lcv.draw_circle(rgb_image, (128, 128), 20, (255, 0, 0))
+        assert out.size == rgb_image.size
+
+    def test_fill_with_minus1(self, rgb_image: Image.Image) -> None:
+        out = lcv.draw_circle(rgb_image, (128, 128), 20, (0, 0, 255), thickness=-1)
+        assert out.getpixel((128, 128)) == (0, 0, 255)
+
+    def test_invalid_radius(self, rgb_image: Image.Image) -> None:
+        with pytest.raises(ValueError):
+            lcv.draw_circle(rgb_image, (128, 128), 0, (255, 0, 0))
+
+
+class TestDrawLine:
+    def test_returns_new_image(self, rgb_image: Image.Image) -> None:
+        out = lcv.draw_line(rgb_image, (0, 0), (100, 100), (255, 255, 0))
+        assert out is not rgb_image
+
+    def test_size_preserved(self, rgb_image: Image.Image) -> None:
+        out = lcv.draw_line(rgb_image, (0, 0), (100, 100), (255, 255, 0))
+        assert out.size == rgb_image.size
+
+    def test_color_on_line(self, rgb_image: Image.Image) -> None:
+        """水平線の色が正しく描画されること。"""
+        blank = Image.new("RGB", (100, 100), (0, 0, 0))
+        out = lcv.draw_line(blank, (0, 50), (99, 50), (255, 255, 255), thickness=1)
+        assert out.getpixel((50, 50)) == (255, 255, 255)
+
+
 class TestBlend:
     def test_returns_new_image(self, rgb_image: Image.Image) -> None:
         out = lcv.blend(rgb_image, rgb_image, 0.5)
