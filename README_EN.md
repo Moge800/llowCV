@@ -1,6 +1,6 @@
 # llowCV
 
-[日本語](README.md)
+[日本語](https://github.com/llowcv/llowcv/blob/main/README.md)
 
 **A lightweight, cv2-like image processing library powered by Pillow.**
 
