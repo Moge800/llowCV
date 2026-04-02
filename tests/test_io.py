@@ -69,11 +69,19 @@ class TestImwrite:
 
 
 class TestImshow:
-    def test_returns_none(self, rgb_image: Image.Image) -> None:
-        # GUI は起動しないが None が返ることだけ確認
-        # CI 環境では pillow の show() が何もしないか一時ファイルを作るだけ
+    def test_returns_none_pillow(self, rgb_image: Image.Image) -> None:
         result = lcv.imshow(rgb_image, backend="pillow")
         assert result is None
+
+    def test_returns_none_default(self, rgb_image: Image.Image) -> None:
+        result = lcv.imshow(rgb_image, backend=None)
+        assert result is None
+
+    def test_mpl_backend(self, rgb_image: Image.Image) -> None:
+        plt = pytest.importorskip("matplotlib.pyplot")
+        result = lcv.imshow(rgb_image, backend="mpl")
+        assert result is None
+        plt.close("all")
 
     def test_invalid_backend(self, rgb_image: Image.Image) -> None:
         with pytest.raises(ValueError):
