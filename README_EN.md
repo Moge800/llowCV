@@ -1,5 +1,7 @@
 # llowCV
 
+[日本語](https://github.com/llowcv/llowcv/blob/main/README.md)
+
 **A lightweight, cv2-like image processing library powered by Pillow.**
 
 OpenCV + NumPy is too heavy for edge devices and PyInstaller executables.
