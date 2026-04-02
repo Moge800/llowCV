@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "llowcv"
-version = "0.1.0"
+version = "0.1.1"
 description = "Lightweight cv2-like image processing library powered by Pillow"
-readme = "README.md"
+readme = "README_EN.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 keywords = ["image", "opencv", "cv2", "pillow", "edge", "lightweight", "camera"]
