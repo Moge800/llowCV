@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llowcv"
+version = "0.1.0"
+description = "Lightweight cv2-like image processing library powered by Pillow"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["image", "opencv", "cv2", "pillow", "edge", "lightweight", "camera"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+]
+dependencies = ["pillow"]
+
+[project.optional-dependencies]
+cv2 = ["numpy", "opencv-python"]
+dev = ["pytest", "imageio"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/llowcv"]
+
+[project.urls]
+Homepage = "https://github.com/Moge800/llowCV"
+Repository = "https://github.com/Moge800/llowCV"
