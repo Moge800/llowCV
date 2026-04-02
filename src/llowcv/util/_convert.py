@@ -67,10 +67,5 @@ def to_bgr(arr: numpy.ndarray) -> numpy.ndarray:
 
     Returns:
         BGR 順の ndarray。
-
-    Raises:
-        ImportError: numpy がインストールされていない場合。
     """
-    import numpy as np  # noqa: F401
-
     return arr[:, :, ::-1].copy()
