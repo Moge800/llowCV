@@ -1,5 +1,7 @@
 # llowCV
 
+[English](README_EN.md)
+
 **Pillow だけで動く、cv2 ライクな軽量画像処理ライブラリ。**
 
 OpenCV + NumPy はエッジデバイスや PyInstaller exe 化で重すぎる。
