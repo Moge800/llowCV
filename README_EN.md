@@ -32,6 +32,12 @@ lcv.imwrite("out.jpg", img)
 pip install llowcv
 ```
 
+For Matplotlib display support:
+
+```bash
+pip install llowcv[mpl]
+```
+
 For NumPy / OpenCV interop:
 
 ```bash
@@ -88,24 +94,26 @@ r_channel = lcv.split(img)[0]              # R channel only, mode='L'
 ### Image I/O
 
 ```python
-img = lcv.imread("input.jpg")              # Read as RGB
-img = lcv.imread("input.jpg", mode="L")    # Read as grayscale
-lcv.imwrite("out.png", img)                # Format inferred from extension
-lcv.imshow(img)                            # Open with OS default viewer
-lcv.imshow(img, backend="mpl")             # Display via Matplotlib
+img = lcv.imread("input.jpg")               # Read as RGB
+img = lcv.imread("input.jpg", mode="L")     # Read as grayscale
+lcv.imwrite("out.png", img)                 # Format inferred from extension
+lcv.imshow(img)                             # Open with OS default viewer
+lcv.imshow(img, backend="mpl")              # Display via Matplotlib (pip install llowcv[mpl])
+lcv.imshow(img, backend="mpl", block=False) # Non-blocking display (mpl only)
 ```
 
 ### Transforms
 
 ```python
-img = lcv.resize(img, (640, 480))                         # Resize
-img = lcv.resize(img, (640, 480), interpolation="cubic")  # With interpolation
-img = lcv.crop(img, (x, y, w, h))                         # Crop (cv2-style xywh)
-img = lcv.rotate(img, 90)                                  # Rotate counter-clockwise
-img = lcv.rotate(img, 45, expand=True)                    # Expand canvas to fit
-img = lcv.flip(img, 0)                                     # Flip vertical
-img = lcv.flip(img, 1)                                     # Flip horizontal
-img = lcv.flip(img, -1)                                    # Flip both axes
+img = lcv.resize(img, (640, 480))                              # Resize
+img = lcv.resize(img, (640, 480), interpolation="cubic")       # With interpolation
+img = lcv.resize(img, img.size, silent=True)                   # Suppress same-size warning
+img = lcv.crop(img, (x, y, w, h))                              # Crop (cv2-style xywh)
+img = lcv.rotate(img, 90)                                      # Rotate counter-clockwise
+img = lcv.rotate(img, 45, expand=True)                         # Expand canvas to fit
+img = lcv.flip(img, 0)                                         # Flip vertical
+img = lcv.flip(img, 1)                                         # Flip horizontal
+img = lcv.flip(img, -1)                                        # Flip both axes
 ```
 
 Interpolation options: `"nearest"` / `"linear"` (default) / `"bilinear"` / `"cubic"` / `"bicubic"` / `"lanczos"`
@@ -113,9 +121,11 @@ Interpolation options: `"nearest"` / `"linear"` (default) / `"bilinear"` / `"cub
 ### Filters & Color
 
 ```python
-img = lcv.blur(img, (5, 5))          # Box blur
-img = lcv.sharpen(img, amount=1.5)   # Sharpen (1.0 = no change)
-img = lcv.to_gray(img)               # Convert to grayscale (mode='L')
+img = lcv.blur(img, (5, 5))               # Box blur
+img = lcv.blur(img, (1, 1))               # radius=0 — no-op, raises UserWarning
+img = lcv.blur(img, (1, 1), silent=True)  # Suppress the warning
+img = lcv.sharpen(img, amount=1.5)        # Sharpen (1.0 = no change)
+img = lcv.to_gray(img)                    # Convert to grayscale (mode='L')
 ```
 
 ### Text Drawing
@@ -163,6 +173,21 @@ with lcv.Camera(index=0) as cam:
 
 Uses Windows Media Foundation on Windows and v4l2 on Linux.
 
+### Global Configuration
+
+```python
+# Suppress all no-op warnings at once
+lcv.config.warn_noop = False
+
+# Or control via environment variable (0 / false / no / off to disable)
+# LLOWCV_WARN_NOOP=0 python main.py
+```
+
+When `warn_noop` is enabled, a `UserWarning` is raised for:
+- `resize`: `dsize` matches the input image size
+- `blur`: `ksize` results in no blurring (e.g. `(1, 1)`)
+- `imshow`: `block=False` used with the `pillow` backend
+
 ## Design Principles
 
 - **Pillow-only core** — NumPy and OpenCV are strictly opt-in
@@ -198,6 +223,8 @@ Key differences:
 
 - Python >= 3.10
 - Pillow (core)
+- matplotlib (`[mpl]` optional)
+- numpy + opencv-python (`[cv2]` optional)
 - numpy + opencv-python (`[cv2]` extra, optional)
 
 ## License
