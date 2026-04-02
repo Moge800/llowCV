@@ -82,7 +82,8 @@ class TestImshow:
 
     def test_mpl_backend(self, rgb_image: Image.Image) -> None:
         plt = pytest.importorskip("matplotlib.pyplot")
-        result = lcv.imshow(rgb_image, backend="mpl")
+        with patch.object(plt, "show", return_value=None):
+            result = lcv.imshow(rgb_image, backend="mpl")
         assert result is None
         plt.close("all")
 
