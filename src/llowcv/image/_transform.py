@@ -1,4 +1,8 @@
+import warnings
+
 from PIL import Image
+
+from llowcv._config import config
 
 _INTERPOLATION = {
     "nearest": Image.Resampling.NEAREST,
@@ -14,6 +18,7 @@ def resize(
     img: Image.Image,
     dsize: tuple[int, int],
     interpolation: str = "linear",
+    silent: bool = False,
 ) -> Image.Image:
     """画像をリサイズする。
 
@@ -22,6 +27,7 @@ def resize(
         dsize: 出力サイズ (width, height)。
         interpolation: 補間方法。'nearest' / 'linear' / 'bilinear' /
             'cubic' / 'bicubic' / 'lanczos'。デフォルトは 'linear'。
+        silent: True の場合、no-op 警告を抑制する。
 
     Returns:
         リサイズされた新しい PIL.Image。
@@ -32,6 +38,13 @@ def resize(
     resample = _INTERPOLATION.get(interpolation)
     if resample is None:
         raise ValueError(f"Unknown interpolation: {interpolation!r}")
+    if img.size == dsize and config.warn_noop and not silent:
+        warnings.warn(
+            f"resize: dsize={dsize!r} is the same as the input image size. "
+            "No resizing will occur.",
+            UserWarning,
+            stacklevel=2,
+        )
     return img.resize(dsize, resample=resample)
 
 
