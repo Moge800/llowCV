@@ -72,7 +72,7 @@ def imshow(
             )
         img.show()
     elif backend == "mpl":
-        import matplotlib.pyplot as plt  # type: ignore
+        import matplotlib.pyplot as plt
 
         plt.imshow(img)
         plt.axis("off")
