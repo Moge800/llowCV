@@ -28,6 +28,12 @@ dev = ["pytest"]
 [tool.hatch.build.targets.wheel]
 packages = ["src/llowcv"]
 
+[tool.ty.src]
+exclude = [
+    "src/llowcv/camera/windows.py",
+    "src/llowcv/camera/linux.py",
+]
+
 [project.urls]
 Homepage = "https://github.com/Moge800/llowCV"
 Repository = "https://github.com/Moge800/llowCV"

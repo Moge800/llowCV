@@ -1,6 +1,7 @@
 """imread / imwrite / imshow のテスト。"""
 
 import pathlib
+from unittest.mock import patch
 
 import pytest
 from PIL import Image
@@ -70,11 +71,13 @@ class TestImwrite:
 
 class TestImshow:
     def test_returns_none_pillow(self, rgb_image: Image.Image) -> None:
-        result = lcv.imshow(rgb_image, backend="pillow")
+        with patch.object(rgb_image.__class__, "show", return_value=None):
+            result = lcv.imshow(rgb_image, backend="pillow")
         assert result is None
 
     def test_returns_none_default(self, rgb_image: Image.Image) -> None:
-        result = lcv.imshow(rgb_image, backend=None)
+        with patch.object(rgb_image.__class__, "show", return_value=None):
+            result = lcv.imshow(rgb_image, backend=None)
         assert result is None
 
     def test_mpl_backend(self, rgb_image: Image.Image) -> None:
@@ -84,8 +87,9 @@ class TestImshow:
         plt.close("all")
 
     def test_block_false_on_pillow_warns(self, rgb_image: Image.Image) -> None:
-        with pytest.warns(UserWarning, match="no effect"):
-            lcv.imshow(rgb_image, backend="pillow", block=False)
+        with patch.object(rgb_image.__class__, "show", return_value=None):
+            with pytest.warns(UserWarning, match="no effect"):
+                lcv.imshow(rgb_image, backend="pillow", block=False)
 
     def test_invalid_backend(self, rgb_image: Image.Image) -> None:
         with pytest.raises(ValueError):

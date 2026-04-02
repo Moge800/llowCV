@@ -148,7 +148,7 @@ class LinuxCamera(Camera):
     ) -> None:
         devpath = f"/dev/video{index}"
         try:
-            self._fd = os.open(devpath, os.O_RDWR | os.O_NONBLOCK)  # type: ignore
+            self._fd = os.open(devpath, os.O_RDWR | os.O_NONBLOCK)  # type: ignore[attr-defined]
         except OSError as e:
             raise OSError(f"Camera {index} not available: {devpath}") from e
         self._mmaps: list[tuple[mmap.mmap, int]] = []
@@ -167,7 +167,7 @@ class LinuxCamera(Camera):
 
         while True:
             try:
-                fcntl.ioctl(self._fd, req, arg)  # type: ignore
+                fcntl.ioctl(self._fd, req, arg)  # type: ignore[attr-defined]
                 return
             except OSError as e:
                 if e.errno == errno.EINTR:
@@ -209,8 +209,8 @@ class LinuxCamera(Camera):
             mm = mmap.mmap(
                 self._fd,
                 buf.length,
-                mmap.MAP_SHARED,  # type: ignore
-                mmap.PROT_READ | mmap.PROT_WRITE,  # type: ignore
+                mmap.MAP_SHARED,  # type: ignore[attr-defined]
+                mmap.PROT_READ | mmap.PROT_WRITE,  # type: ignore[attr-defined]
                 offset=buf.m.offset,
             )
             self._mmaps.append((mm, buf.length))
