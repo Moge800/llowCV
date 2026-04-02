@@ -22,7 +22,8 @@ dependencies = ["pillow"]
 
 [project.optional-dependencies]
 cv2 = ["numpy", "opencv-python"]
-dev = ["pytest", "imageio"]
+mpl = ["matplotlib"]
+dev = ["pytest"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/llowcv"]
