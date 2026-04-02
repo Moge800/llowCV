@@ -83,6 +83,10 @@ class TestImshow:
         assert result is None
         plt.close("all")
 
+    def test_block_false_on_pillow_warns(self, rgb_image: Image.Image) -> None:
+        with pytest.warns(UserWarning, match="no effect"):
+            lcv.imshow(rgb_image, backend="pillow", block=False)
+
     def test_invalid_backend(self, rgb_image: Image.Image) -> None:
         with pytest.raises(ValueError):
             lcv.imshow(rgb_image, backend="unknown")

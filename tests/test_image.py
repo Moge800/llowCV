@@ -1,5 +1,7 @@
 """画像変換・フィルタ・描画・合成 API のテスト。"""
 
+import warnings
+
 import pytest
 from PIL import Image
 
@@ -28,9 +30,23 @@ class TestResize:
         with pytest.raises(ValueError):
             lcv.resize(rgb_image, (64, 64), interpolation="invalid")
 
-    def test_same_size(self, rgb_image: Image.Image) -> None:
-        out = lcv.resize(rgb_image, rgb_image.size)
-        assert out.size == rgb_image.size
+    def test_same_size_warns(self, rgb_image: Image.Image) -> None:
+        with pytest.warns(UserWarning, match="same as the input"):
+            lcv.resize(rgb_image, rgb_image.size)
+
+    def test_same_size_silent(self, rgb_image: Image.Image) -> None:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            lcv.resize(rgb_image, rgb_image.size, silent=True)
+
+    def test_same_size_global_config(self, rgb_image: Image.Image) -> None:
+        lcv.config.warn_noop = False
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error")
+                lcv.resize(rgb_image, rgb_image.size)
+        finally:
+            lcv.config.warn_noop = True
 
 
 class TestCrop:
@@ -101,6 +117,24 @@ class TestBlur:
     def test_mode_preserved(self, rgb_image: Image.Image) -> None:
         out = lcv.blur(rgb_image, (5, 5))
         assert out.mode == rgb_image.mode
+
+    def test_noop_warns(self, rgb_image: Image.Image) -> None:
+        with pytest.warns(UserWarning, match="no blurring"):
+            lcv.blur(rgb_image, (1, 1))
+
+    def test_noop_silent(self, rgb_image: Image.Image) -> None:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            lcv.blur(rgb_image, (1, 1), silent=True)
+
+    def test_noop_global_config(self, rgb_image: Image.Image) -> None:
+        lcv.config.warn_noop = False
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error")
+                lcv.blur(rgb_image, (1, 1))
+        finally:
+            lcv.config.warn_noop = True
 
     def test_invalid_ksize_zero(self, rgb_image: Image.Image) -> None:
         with pytest.raises(ValueError):
